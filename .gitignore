@@ -167,3 +167,6 @@ keys.json
 examples/**/package-lock.json
 examples/**/yarn.lock
 examples/**/pnpm-lock.yaml
+# 凭据不入库（2026-11-13）
+CREDENTIALS.md
+SECRETS.md
