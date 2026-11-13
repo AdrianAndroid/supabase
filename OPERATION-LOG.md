@@ -243,6 +243,23 @@ git push -u origin learn         # 584MB 浅克隆，上传约 4 分钟
 结果：远端 `AdrianAndroid/supabase` 新增 `refs/heads/learn` = `1a52cffc`；`master` 未动。
 注意：`CREDENTIALS.md`、`SECRETS.md` 已随分支推送到 public 仓库。
 
+
+### 2.11 轮换两台机器 SSH 密码 + 凭据出库（2026-11-13）
+
+背景：`CREDENTIALS.md`/`SECRETS.md` 曾推送到 public 仓库，SSH 密码随之公开。
+
+处理（顺序很重要：先装密钥、验证可用，再改密码）：
+1. 阿里云 root 的 authorized_keys 加入：Mac 的 ed25519（`~/.ssh/id_ed25519_aliyun`）与
+   内网机的 ed25519。注意：**该 sshd 拒绝 Mac 的 RSA 公钥**（算法策略），Mac 必须用 ed25519。
+2. 验证：Mac→阿里云（ed25519 ✓）、内网机→阿里云（ed25519 ✓）。
+3. `chpasswd` 轮换：阿里云 root、内网机 zhaojian（sudo 密码=登录密码，同步轮换）。
+   新密码只记录在服务器 `CREDENTIALS.md`（600），**不再入 git**。
+4. `CREDENTIALS.md`、`SECRETS.md` 加入 `.gitignore` 并 `git rm --cached`，
+   commit `415fe1d5` 推送。git 历史里的旧密码**已作废**，无需 rewrite。
+5. GitHub 上的 `learn` 分支自此不再包含凭据文件（历史除外，且为已作废值）。
+
+结论：公开仓库泄漏的那套 SSH 凭据已全部失效；两台机器当前凭据仅存服务器文档。
+
 ---
 
 ## 3. 验证结果（部署当日实测）
