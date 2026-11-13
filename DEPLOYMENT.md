@@ -117,3 +117,20 @@ docker restart frpc                  # 改 frpc.toml 后生效（会瞬断经 fr
   申请证书后改造该 conf 为 443 + 301。
 - 注意：nginx 容器访问宿主端口必须用 docker0 网关 `172.17.0.1`（容器内 127.0.0.1 是容器自身），
   与 `jellyfin.zhaojian.xin.conf`（58096）的既有写法一致。
+
+## Git 远端（2026-11-13 追加）
+
+`~/ubuntu/supabase` 的远端已改：
+
+| remote | URL | 用途 |
+|---|---|---|
+| `origin` | `git@github.com:AdrianAndroid/supabase.git` | 自己的仓库，日常提交/推送 |
+| `upstream` | `https://github.com/supabase/supabase.git` | 上游，升级时拉取 |
+
+- 当前分支：**`learn`**（跟踪 `origin/learn`），由 v1.26.08 的提交 + 本机改动构成，
+  commit `1a52cffc chore(selfhost): docker compose port bindings + deployment/ops documentation (learn)`
+- 仓库是浅克隆（`--depth 1`），升级到上游新版本建议重新 clone 再重做端口修改，
+  不必强行 unshallow（体积 584MB）。
+- ⚠️ `learn` 分支里已包含 `CREDENTIALS.md` / `SECRETS.md`（测试环境凭据），
+  该 GitHub 仓库为 public，等于凭据公开。若要收紧：`git rm --cached` 这两个文件后
+  加入 `.gitignore` 再提交（历史里仍可查到，需 rewrite 或轮换密钥）。

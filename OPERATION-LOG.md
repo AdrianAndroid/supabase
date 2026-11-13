@@ -228,6 +228,21 @@ storage/v1/bucket (anon)     → 200
 http://8.152.204.58:54321/…  → 200（IP 直连仍可用）
 ```
 
+
+### 2.10 更换 Git 远端并推送 learn 分支（2026-11-13）
+
+```bash
+cd ~/ubuntu/supabase
+git remote rename origin upstream
+git remote add origin git@github.com:AdrianAndroid/supabase.git   # 该机 SSH key 已是 AdrianAndroid 身份
+git checkout -b learn
+git add -A                       # docker/.env 已被 docker/.gitignore 忽略，未提交
+git commit -m "chore(selfhost): docker compose port bindings + deployment/ops documentation (learn)"
+git push -u origin learn         # 584MB 浅克隆，上传约 4 分钟
+```
+结果：远端 `AdrianAndroid/supabase` 新增 `refs/heads/learn` = `1a52cffc`；`master` 未动。
+注意：`CREDENTIALS.md`、`SECRETS.md` 已随分支推送到 public 仓库。
+
 ---
 
 ## 3. 验证结果（部署当日实测）
